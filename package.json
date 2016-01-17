@@ -1,0 +1,35 @@
+{
+  "name": "reactrelay",
+  "version": "1.0.0",
+  "description": "learn react&relay",
+  "main": "index.js",
+  "scripts": {
+    "test": "test"
+  },
+  "author": "iamchenxin",
+  "license": "ISC",
+  "devDependencies": {
+    "babel-core": "^6.3.15",
+    "babel-loader": "^6.2.0",
+    "babel-preset-es2015": "^6.3.13",
+    "babel-preset-react": "^6.3.13",
+    "babel-preset-stage-0": "^6.3.13",
+    "babel-relay-plugin": "^0.6.0",
+    "gulp": "^3.9.0",
+    "gulp-babel": "^6.1.1",
+    "gulp-react": "^3.1.0",
+    "gulp-sourcemaps": "^1.6.0",
+    "webpack": "^1.12.9"
+  },
+  "dependencies": {
+    "babel-polyfill": "^6.1.4",
+    "express": "^4.13.3",
+    "express-graphql": "^0.4.5",
+    "graphql": "^0.4.14",
+    "graphql-relay": "^0.3.5",
+    "gulp-rename": "^1.2.2",
+    "react": "^0.14.3",
+    "react-dom": "^0.14.3",
+    "react-relay": "^0.6.0"
+  }
+}
