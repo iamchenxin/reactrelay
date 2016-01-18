@@ -13,7 +13,9 @@ var mySchema=schema;
 function run(port){
     let server=express();
 
-    server.use('/',express.static(path.resolve(__dirname,"../app")));
+    let staticPath = path.resolve(__dirname,"../client");
+    console.log(staticPath);
+    server.use('/',express.static(staticPath));
     server.use('/graphql',gHttp({
         schema:mySchema,
         graphiql:true,

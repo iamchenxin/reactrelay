@@ -33,7 +33,7 @@ var webpack=require('webpack');
 var webCompiler=webpack({
    entry:'./src/client/app.js',
     output:{
-        path:path.join(__dirname,'dst/server/client'),
+        path:path.join(__dirname,'dst/client'),
         filename:'app.js'
     },
     devtool:"source-map",
@@ -61,7 +61,7 @@ gulp.task("app",function(){
 
     gutil.log("[HTML]", 'copy html ...');
     gulp.src('src/client/**/*.html')
-    .pipe(gulp.dest('dst/server/client/'));
+    .pipe(gulp.dest('dst/client/'));
 });
 
 gulp.task("app-w",function(){
