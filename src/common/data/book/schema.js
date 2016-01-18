@@ -1,7 +1,7 @@
 /**
  * Created by iamchenxin on 1/15/16.
  */
-import {getUser,getBook} from "./database.js";
+import {database} from "./database.js";
 
 import {
     GraphQLBoolean,
@@ -41,7 +41,7 @@ let userQuery =new GraphQLObjectType({
                 console.log(user);
                 console.log("***************************");
               //  console.log(info);
-                return getBook(user.book);
+                return database.getBook(user.book);
             }
         }
     }
@@ -71,11 +71,32 @@ let rootQuery = new GraphQLObjectType({
                     type:GraphQLInt
                 }
             },
-            resolve:(root, {id})=>getUser(id)
+            resolve:(root, {id})=>database.getUser(id)
+        }
+    }
+});
+
+let rootMutation = new GraphQLObjectType({
+    name:"Mutation",
+    fields:{
+        updateUser:{
+            type:GraphQLString,
+            args:{
+                id:{
+                    type:GraphQLInt
+                },
+                name:{
+                    type:GraphQLString
+                }
+            },
+            resolve:(parent,{id,name})=>{
+                return database.updateUser(id,name);
+            }
         }
     }
 });
 
 export var schema=new GraphQLSchema({
-    query: rootQuery
+    query: rootQuery,
+    mutation: rootMutation
 });
