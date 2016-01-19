@@ -68,6 +68,7 @@ class NewPostBox extends React.Component{
     }
 
     _onSend=(event)=>{
+        event.preventDefault();
         Task.emit("blog.post",{
             user:this.state.userName,
             content:this.state.inputText
@@ -78,7 +79,7 @@ class NewPostBox extends React.Component{
         let props=this.props;
         return (
             <div>
-                <form>
+                <form onSubmit={this._onSend}>
                     <textarea value={this.state.inputText} onChange={this._GenInputHandle("inputText")} />
                     <br/>
                     <b>Name : </b>
@@ -146,10 +147,7 @@ class Blog extends React.Component{
 
 export function Render(data){
     if(getHash()!='new_post'){
-        data.postList=[{
-            user:"local",
-            content:"local test"
-        }];
+        data.postList=data.page;
     }
     ReactDOM.render(<Blog {...data} /> , document.getElementById("contain"));
 }

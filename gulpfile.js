@@ -78,5 +78,5 @@ gulp.task("app-w",function(){
 gulp.task("schema",['server'],function(){
     console.log('update schema ... ');
     var updateSchema=require("./dst/common/scripts/updateSchema.js");
-    updateSchema('./dst/common/data/schema.js','./dst/common/data/');
+    updateSchema('./dst/common/data/rblog/schema.js','./dst/common/data/rblog/');
 });
