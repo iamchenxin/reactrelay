@@ -7,7 +7,7 @@ import express from 'express';
 import webpack from 'webpack';
 import path from 'path';
 //import {mySchema} from '../common/data/schema.js';
-import {schema} from '../common/data/rblog/schema.js';
+import {schema} from '../common/data/testInterface/schema.js';
 var mySchema=schema;
 
 function run(port){

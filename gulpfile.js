@@ -76,7 +76,7 @@ gulp.task("app-w",function(){
 });
 
 gulp.task("schema",['server'],function(){
-    var subdir='rblog';
+    var subdir='testInterface';
     console.log('update schema ... ');
     var updateSchema=require("./dst/common/scripts/updateSchema.js");
     updateSchema('./dst/common/data/'+subdir+'/schema.js','./dst/common/data/'+subdir+'/');
