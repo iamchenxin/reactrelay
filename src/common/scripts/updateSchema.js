@@ -9,10 +9,10 @@ import { introspectionQuery, printSchema } from 'graphql/utilities';
 
 //
 function updateSchema(schemaPath,dst){
-    console.log("34f3");
     var srcPath=path.resolve(schemaPath);
     var basename=path.basename(srcPath,".js");
     var dstPath_noExt=path.resolve(dst,basename);
+    console.log(`srcPath=[${srcPath}] , dstPath_noExt=[${dstPath_noExt}]`);
 
     var mySchema=require(srcPath).schema;
  //   console.log(mySchema);

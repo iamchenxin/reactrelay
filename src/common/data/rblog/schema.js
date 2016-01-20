@@ -11,8 +11,22 @@ import {
     GraphQLObjectType,
     GraphQLSchema,
     GraphQLString,
+    GraphQLInterfaceType
 } from 'graphql';
 import {database} from './database.js';
+
+let postInterface = new GraphQLInterfaceType({
+    name:'PostI',
+    fields:{
+        id:{
+            type:GraphQLInt,
+            description: 'The id of the character.',
+        },
+    },
+    resolveType:resolved_obj=>{
+        return postQuery;
+    }
+});
 
 let postQuery = new GraphQLObjectType({
     name:'Post',
@@ -20,7 +34,8 @@ let postQuery = new GraphQLObjectType({
         id:{type:GraphQLInt},
         user:{type:GraphQLString},
         content:{type:GraphQLString}
-    }
+    },
+    interfaces:[postInterface]
 });
 
 let postsQuery = new GraphQLObjectType({
