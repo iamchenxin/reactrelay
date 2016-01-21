@@ -117,7 +117,7 @@ import {
  * The first method defines the way we resolve an ID to its object.
  * The second defines the way we resolve a node object to its GraphQL type.
  */
-var {nodeInterface, nodeField} = nodeDefinitions(
+var {nodeField , nodeInterface} = nodeDefinitions(
   (globalId) => {
     var {type, id} = fromGlobalId(globalId);
     if (type === 'Faction') {
@@ -268,7 +268,8 @@ var shipMutation = mutationWithClientMutationId({
       resolve: (payload) => getFaction(payload.factionId),
     },
   },
-  mutateAndGetPayload: ({shipName, factionId}) => {
+  mutateAndGetPayload: (args) => {
+    let {shipName, factionId} =args;
     var newShip = createShip(shipName, factionId);
     return {
       shipId: newShip.id,
