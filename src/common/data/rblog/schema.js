@@ -11,69 +11,91 @@ import {
     GraphQLObjectType,
     GraphQLSchema,
     GraphQLString,
-    GraphQLInterfaceType
 } from 'graphql';
+
+import {
+    connectionArgs,
+    connectionDefinitions,
+    connectionFromArray,
+    fromGlobalId,
+    globalIdField,
+    mutationWithClientMutationId,
+    nodeDefinitions,
+} from 'graphql-relay';
+
 import {database} from './database.js';
 
-let postInterface = new GraphQLInterfaceType({
-    name:'PostI',
-    fields:{
-        id:{
-            type:GraphQLInt,
-            description: 'The id of the character.',
-        },
-    },
-    resolveType:resolved_obj=>{
-        return postQuery;
+function getDataByGlobalId(globalId){
+    let {type,id}=fromGlobalId(globalId);
+    switch (type){
+        case "Post":
+            return database.getPost(id);
+        default:
+            return null;
     }
-});
+}
+
+function fromServerTypeToGraphType(resolved_obj){
+    return postQuery;
+}
+
+var {nodeFields,nodeInterface} = nodeDefinitions(
+    getDataByGlobalId,
+    resolved_obj=>fromServerTypeToGraphType(resolved_obj)
+);
 
 let postQuery = new GraphQLObjectType({
     name:'Post',
     fields:{
-        id:{type:GraphQLInt},
+        id:globalIdField('Post'),
         user:{type:GraphQLString},
         content:{type:GraphQLString}
     },
-    interfaces:[postInterface]
+    interfaces:[nodeInterface]
 });
 
-let postsQuery = new GraphQLObjectType({
-    name:'Posts',
+var postConnectionDef = connectionDefinitions( {name: 'Post', nodeType:postQuery});
+
+let rootQuery = new GraphQLObjectType({
+    name:'root',
     fields:()=>({
-        page:{
-            type:new GraphQLList(postQuery),
-            args:{
-                num:{
-                    type:GraphQLInt
-                }
-            },
-            resolve:(parent,{num})=>database.getPosts(num)
+        posts:{
+            type:postConnectionDef.connectionType,
+            args:connectionArgs,
+            resolve:(_this,args)=> connectionFromArray(database.getAll(), args)
         }
     })
 });
 
-let postsMutation = new GraphQLObjectType({
-    name:"newPost",
-    fields:{
-        newpost:{
-            type:GraphQLInt,
-            args:{
-                user:{
-                    type:GraphQLString
-                },
-                content:{
-                    type:GraphQLString
-                }
-            },
-            resolve:(parent,{user,content})=>{
-                return database.newPost(user,content);
-            }
+var NewPost = mutationWithClientMutationId({
+   name:"NewPost",
+    inputFields:{
+        user:{type:new GraphQLNonNull(GraphQLString)},
+        content:{type:new GraphQLNonNull(GraphQLString)}
+    },
+    outputFields:{
+        post:{
+            type:postQuery,
+            resolve:(payload)=>database.getPost(payload.postid)
         }
+    },
+    mutateAndGetPayload:({user,content})=>{
+        let postid = database.newPost(user,content);
+        return {
+            postid:postid
+        };
     }
 });
 
+var mutationType = new GraphQLObjectType({
+    name:'Mutation',
+    fields:{
+        newPost:NewPost
+    }
+});
+
+
 export var schema=new GraphQLSchema({
-    query:postsQuery,
-    mutation:postsMutation
+    query:rootQuery,
+    mutation:mutationType
 });

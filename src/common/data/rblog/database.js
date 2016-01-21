@@ -29,6 +29,14 @@ class Data{
         return this.postList.slice(0,clipNum);
     }
 
+    getAll(){
+        return this.postList;
+    }
+
+    getPost(id){
+        return this.postList[id];
+    }
+
     newPost(user,content){
         let id=this.postList.length;
         this.postList.push({
