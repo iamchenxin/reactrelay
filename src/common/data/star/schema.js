@@ -282,7 +282,10 @@ var shipMutation = mutationWithClientMutationId({
     },
     faction: {
       type: factionType,
-      resolve: (payload) => getFaction(payload.factionId),
+      resolve: (payload) => {
+        let rt=getFaction(payload.factionId);
+        return rt;
+      },
     },
   },
   mutateAndGetPayload: (args) => {
