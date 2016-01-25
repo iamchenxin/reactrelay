@@ -47,6 +47,13 @@ class Data{
         });
         return id;
     }
+
+    editPost(id,user,content){
+        this.postList[id].user=user;
+        this.postList[id].content=content;
+        return this.postList[id];
+    }
+
 }
 
 var database = new Data();

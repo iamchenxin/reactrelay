@@ -56,13 +56,38 @@ let postQuery = new GraphQLObjectType({
 
 var postConnectionDef = connectionDefinitions( {name: 'Post', nodeType:postQuery});
 
+var postsType =new GraphQLObjectType({
+    name:'Posts',
+    fields:{
+        postList:{
+            type:postConnectionDef.connectionType,
+            args:connectionArgs,
+            resolve:(_this,args)=> {
+                let v = connectionFromArray(database.getAll(), args);
+                console.dir(v);
+                return v;
+            }
+        },
+        id:globalIdField('Posts'),
+        k:{
+           type:GraphQLString
+        }
+    },
+    interfaces:[nodeInterface]
+});
+
 let rootQuery = new GraphQLObjectType({
     name:'root',
     fields:()=>({
         posts:{
-            type:postConnectionDef.connectionType,
-            args:connectionArgs,
-            resolve:(_this,args)=> connectionFromArray(database.getAll(), args)
+            type:postsType,
+            args:{
+                k:{
+                    name:"k",
+                    type:GraphQLString
+                }
+            },
+            resolve:(_this,args)=>{return {k:args.k,id:0}}
         }
     })
 });
@@ -75,7 +100,7 @@ var NewPost = mutationWithClientMutationId({
     },
     outputFields:{
         post:{
-            type:postQuery,
+            type:postsType,
             resolve:(payload)=>database.getPost(payload.postid)
         }
     },
@@ -87,10 +112,30 @@ var NewPost = mutationWithClientMutationId({
     }
 });
 
+var EditPost = mutationWithClientMutationId({
+   name:'EditPost',
+    inputFields:{
+        user:{type:new GraphQLNonNull(GraphQLString)},
+        content:{type:new GraphQLNonNull(GraphQLString)},
+        id:{type:new GraphQLNonNull(GraphQLID)},
+    },
+    outputFields:{
+        post:{
+            type:postQuery,
+            resolve:(payload)=>payload
+        }
+    },
+    mutateAndGetPayload:({user,content,id})=>{
+        let v = database.editPost(fromGlobalId(id).id,user,content);
+        return v;
+    }
+});
+
 var mutationType = new GraphQLObjectType({
     name:'Mutation',
     fields:{
-        newPost:NewPost
+        newPost:NewPost,
+        editPost:EditPost
     }
 });
 

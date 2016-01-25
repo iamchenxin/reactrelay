@@ -1,18 +1,18 @@
 /**
  * Created by iamchenxin on 1/18/16.
  */
-import {Render} from './rblog/post.js';
-import {getPosts,newPost} from './rblog/client.js';
-import {Task} from '../common/scripts/task';
+
+import React from 'react';
+import ReactDOM from 'react-dom';
+import Relay from 'react-relay';
+import {RelayPage} from './rrblog/post';
+import {rootR} from './rrblog/relayRoot';
 
 
-Task.task("blog.post",data=>{
-   newPost(data.user,data.content);
-});
-
-Task.dataflow("client.getPosts",data=>{
-    console.log(JSON.stringify(data) );
-    Render(data);
-});
-
-getPosts(0);
+ReactDOM.render(
+    <Relay.RootContainer
+        Component={RelayPage}
+        route={new rootR()}
+    />,
+    document.getElementById('contain')
+);

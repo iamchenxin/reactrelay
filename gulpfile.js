@@ -44,8 +44,8 @@ var webCompiler=webpack({
                 test:/\.js$/,
                 exclude:/node_modules/,
                 query:{
-                    presets:['es2015','react'],
-                    plugins:["transform-class-properties","transform-decorators"]
+                    presets:["es2015", "stage-0", "react"],
+                    plugins:["./dst/common/scripts/babelRelayPlugin"]
                 }
             }
         ]

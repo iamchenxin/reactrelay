@@ -1,7 +1,8 @@
 import updateSchema from './updateSchema';
+import path from 'path';
 
-function ts(subdir){
-    updateSchema('../data/'+subdir+'/schema.js','../data/'+subdir+'/');
+function ts(srcdir){
+    updateSchema(path.join(srcdir,'schema.js'),srcdir);
 }
 
-ts('rblog');
+ts(path.resolve( './dst/common/data/rblog'));

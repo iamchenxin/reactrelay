@@ -60,11 +60,13 @@ class NewPostBox extends React.Component{
     }
 
     _GenInputHandle(bindState){
-        return ( (event)=>{
+        let _onChange= ( (event)=>{
             this.setState({
                 [bindState]:event.target.value
             });
         } );
+        let _value= this.state[bindState];
+        return {value:_value,onChange:_onChange};
     }
 
     _onSend=(event)=>{
