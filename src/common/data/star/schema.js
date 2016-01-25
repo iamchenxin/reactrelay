@@ -24,6 +24,7 @@ import {
   connectionDefinitions,
   connectionFromArray,
   fromGlobalId,
+  toGlobalId,
   globalIdField,
   mutationWithClientMutationId,
   nodeDefinitions,
@@ -187,22 +188,34 @@ var {connectionType: shipConnection} =
 var factionType = new GraphQLObjectType({
   name: 'Faction',
   description: 'A faction in the Star Wars saga',
-  fields: () => ({
-    id: globalIdField('Faction'),
-    name: {
-      type: GraphQLString,
-      description: 'The name of the faction.',
-    },
-    ships: {
-      type: shipConnection,
-      description: 'The ships used by the faction.',
-      args: connectionArgs,
-      resolve: (faction, args) => connectionFromArray(
-        faction.ships.map((id) => getShip(id)),
-        args
-      ),
-    },
-  }),
+  fields: () => {
+
+    return {
+      id: {
+        name: 'id',
+        description: 'The ID of an object',
+        type: new GraphQLNonNull(GraphQLID),
+        resolve: (obj, args, info) => {
+          return toGlobalId(
+            'Faction',
+            obj.id)
+        }
+      },
+      name: {
+        type: GraphQLString,
+        description: 'The name of the faction.',
+      },
+      ships: {
+        type: shipConnection,
+        description: 'The ships used by the faction.',
+        args: connectionArgs,
+        resolve: (faction, args) => connectionFromArray(
+          faction.ships.map((id) => getShip(id)),
+          args
+        ),
+      },
+    };
+  },
   interfaces: [nodeInterface],
 });
 
@@ -226,7 +239,11 @@ var queryType = new GraphQLObjectType({
           type: new GraphQLList(GraphQLString),
         },
       },
-      resolve: (root, {names}) => getFactions(names),
+      resolve: (root, {names}) => {
+        let rt =getFactions(names);
+   //     console.dir(rt);
+        return rt;
+      },
     },
     node: nodeField,
   }),
