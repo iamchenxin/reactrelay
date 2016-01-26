@@ -26,11 +26,13 @@ class NewPost extends React.Component{
 
     _onSubmit=(event)=>{
         event.preventDefault();
-
+        console.log('..');
+        console.log(this.props.posts);
         Relay.Store.commitUpdate(new NewPostMutation(
             {
                 user:this.state.inputUser,
-                content:this.state.inputContent
+                content:this.state.inputContent,
+                posts:this.props.posts
             }));
     };
 
@@ -69,9 +71,20 @@ class NewPostMutation extends Relay.Mutation{
               content
               id
             }
+            posts{
+              id
+            }
             clientMutationId
         }`;
     }
+
+    static fragments= {
+        posts: ()=>Relay.QL`
+        fragment on Posts{
+          id
+        }
+      `,
+    };
 
     getConfigs() {
         console.dir(this.props);
@@ -80,17 +93,21 @@ class NewPostMutation extends Relay.Mutation{
             type: 'FIELDS_CHANGE',
             // Correlate the `updatedDocument` field in the response
             // with the DataID of the record we would like updated.
-            fieldIDs: {post: "a"},
+            fieldIDs: {posts: this.props.posts.id},
         }];
     }
 }
 
 var NewPostRelay = Relay.createContainer(NewPost,{
     fragments:{
-
-    }
+        posts:()=>Relay.QL`
+            fragment on Posts{
+              ${NewPostMutation.getFragment('posts')}
+            }
+        `,
+    },
 });
 
 export {
-    NewPost
+    NewPostRelay
 }

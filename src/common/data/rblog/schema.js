@@ -100,8 +100,12 @@ var NewPost = mutationWithClientMutationId({
     },
     outputFields:{
         post:{
-            type:postsType,
+            type:postQuery,
             resolve:(payload)=>database.getPost(payload.postid)
+        },
+        posts:{
+            type:postsType,
+            resolve:(payload)=>({"id":0})
         }
     },
     mutateAndGetPayload:({user,content})=>{

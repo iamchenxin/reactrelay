@@ -1,6 +1,6 @@
 import React from 'react';
 import Relay from 'react-relay';
-import {NewPost} from './newpost';
+import {NewPostRelay} from './newpost';
 
 function Post(props){
     console.log(props);
@@ -32,7 +32,7 @@ class Page extends React.Component{
                 {posts.postList.edges.map(edge=>{
                    return ( <RelayPost post={edge.node} />);
                 })}
-                <NewPost />
+                <NewPostRelay posts={posts}/>
             </div>
         )
     }
@@ -42,13 +42,14 @@ export var RelayPage=Relay.createContainer(Page,{
     fragments:{
         posts:()=>Relay.QL`
         fragment on Posts{
-          postList(first:10){
+          postList(first:5){
                 edges{
                     node{
                         ${RelayPost.getFragment('post')}
                     }
                 }
             }
+           ${NewPostRelay.getFragment('posts')}
         }`,
     }
 });
