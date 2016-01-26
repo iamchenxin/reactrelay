@@ -3,51 +3,34 @@
  */
 import React from 'react';
 import Relay from 'react-relay';
+import {InputBox} from './inputbox';
 
 class NewPost extends React.Component{
-    constructor(props){
+    constructor(props) {
         super(props);
-        this.state={
-            inputUser:"",
-            inputContent:""
-        }
     }
 
-    _bindInput(bindState){
-        return {
-            value:this.state[bindState],
-            onChange: (event)=>{
-                    this.setState({
-                        [bindState]:event.target.value
-                    })
-                }
+    _onSubmit=(data)=>{
+        let post={
+            user:data.user,
+            content:data.content,
+            postsID:0
         };
-    }
-
-    _onSubmit=(event)=>{
-        event.preventDefault();
-        console.log('..');
-        console.log(this.props.posts);
-        Relay.Store.commitUpdate(new NewPostMutation(
-            {
-                user:this.state.inputUser,
-                content:this.state.inputContent,
-                posts:this.props.posts
-            }));
+      Relay.Store.commitUpdate(new NewPostMutation(post)) ;
     };
 
     render(){
-
         return(
-            <div>
-              <form onSubmit={this._onSubmit}>
-                  <textarea {...this._bindInput('inputContent')} /><br/>
-                  <b>User:</b><input type="text" {...this._bindInput('inputUser')}/>
-                  <button>Send</button>
-              </form>
-            </div>
+          <div>
+              <InputBox
+                onSubmit={this._onSubmit}
+                user="D"
+                content="C"
+              />
+          </div>
         );
     }
+
 }
 
 class NewPostMutation extends Relay.Mutation{
@@ -93,7 +76,7 @@ class NewPostMutation extends Relay.Mutation{
             type: 'FIELDS_CHANGE',
             // Correlate the `updatedDocument` field in the response
             // with the DataID of the record we would like updated.
-            fieldIDs: {posts: this.props.posts.id},
+            fieldIDs: {posts: this.props.postsID},
         }];
     }
 }
