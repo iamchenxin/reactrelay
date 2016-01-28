@@ -10,11 +10,12 @@ class EditPostMutation extends Relay.Mutation{
   }
 
   getVariables(){
-    console.log(this.props);
+    console.dir(this.props);
+    let {po,newpost}=this.props;
     return {
-      user:this.props.user,
-      content:this.props.content,
-      id:this.props.id
+      user:newpost.user,
+      content:newpost.content,
+      id:po.id
     };
   }
 
@@ -22,7 +23,7 @@ class EditPostMutation extends Relay.Mutation{
     return [{
       type:'FIELDS_CHANGE',
       fieldIDs:{
-        post:this.props.id
+        post:this.props.po.id
       }
     }];
   }
@@ -36,9 +37,9 @@ class EditPostMutation extends Relay.Mutation{
       }
     }`;
   }
-
+// relay will check po is passed in as a params name!
   static fragments= {
-    post:()=>Relay.QL`
+    po:()=>Relay.QL`
     fragment on Post{
       id
     }`

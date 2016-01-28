@@ -11,12 +11,12 @@ class NewPost extends React.Component{
     }
 
     _onSubmit=(data)=>{
-        let post={
+        let newpost={
             user:data.user,
             content:data.content,
-            postsID:0
         };
-      Relay.Store.commitUpdate(new NewPostMutation(post)) ;
+        console.dir(this.props);
+      Relay.Store.commitUpdate(new NewPostMutation({posts:this.props.posts,newpost})) ;
     };
 
     render(){
@@ -33,6 +33,7 @@ class NewPost extends React.Component{
 
 }
 
+// posts , newpost
 class NewPostMutation extends Relay.Mutation{
     getMutation(){
         return Relay.QL`mutation{newPost}`;
@@ -40,24 +41,18 @@ class NewPostMutation extends Relay.Mutation{
 
     getVariables(){
         return {
-            user:this.props.user,
-            content:this.props.content,
-            clientMutationId: "a",
+            user:this.props.newpost.user,
+            content:this.props.newpost.content,
         };
     }
 
     getFatQuery(){
         return Relay.QL`
         fragment on NewPostPayload{
-            post{
-              user
-              content
-              id
-            }
+            postEdge
             posts{
-              id
+              postList
             }
-            clientMutationId
         }`;
     }
 
@@ -70,13 +65,20 @@ class NewPostMutation extends Relay.Mutation{
     };
 
     getConfigs() {
+        console.log("newpost..");
         console.dir(this.props);
-        console.log(this.props);
         return [{
-            type: 'FIELDS_CHANGE',
-            // Correlate the `updatedDocument` field in the response
-            // with the DataID of the record we would like updated.
-            fieldIDs: {posts: this.props.postsID},
+            type: 'RANGE_ADD',
+            parentName:'posts',
+            parentID:this.props.posts.id,
+            connectionName:'postList',
+            edgeName:'postEdge',
+            rangeBehaviors:{
+                '': 'append',
+                'status(any)': 'append',
+                'status(active)': 'append',
+                'status(completed)': null,
+            }
         }];
     }
 }

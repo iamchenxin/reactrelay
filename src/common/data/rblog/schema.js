@@ -21,6 +21,7 @@ import {
     globalIdField,
     mutationWithClientMutationId,
     nodeDefinitions,
+  offsetToCursor,
 } from 'graphql-relay';
 
 import {database} from './database.js';
@@ -99,9 +100,14 @@ var NewPost = mutationWithClientMutationId({
         content:{type:new GraphQLNonNull(GraphQLString)}
     },
     outputFields:{
-        post:{
-            type:postQuery,
-            resolve:(payload)=>database.getPost(payload.postid)
+        postEdge:{
+            type:postConnectionDef.edgeType,
+            resolve:(payload)=> {
+                return({
+                    cursor:offsetToCursor(payload.postid),
+                    node:database.getPost(payload.postid)
+                });
+            }
         },
         posts:{
             type:postsType,

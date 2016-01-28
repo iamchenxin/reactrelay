@@ -1,7 +1,7 @@
 import React from 'react';
 import Relay from 'react-relay';
 import {NewPostRelay} from './newpost';
-import {EditPost} from './editpost';
+import {EditPostRelay} from './editpost';
 
 class Post extends React.Component{
   constructor(props){
@@ -25,13 +25,14 @@ class Post extends React.Component{
 
   render(){
     let {post}=this.props;
+    console.dir(this.props);
     console.log("Post reRender")
     return (
       <div>
         {(()=>{
           if(this.state.editable){
 
-            return <EditPost post={post} onFinished={this._onFinished}/>;
+            return <EditPostRelay post={this.props.post} onFinished={this._onFinished}/>;
           }else {
             return (
               <div>
@@ -54,6 +55,7 @@ var RelayPost=Relay.createContainer(Post,{
         id
         user
         content
+        ${EditPostRelay.getFragment('post')}
         }
         `,
     }

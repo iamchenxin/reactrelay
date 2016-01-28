@@ -49,7 +49,12 @@ var webCompiler=webpack({
                 }
             }
         ]
+    },
+    /*
+    externals: {
+        "react-relay": "Relay"
     }
+    */
 });
 
 gulp.task("app",function(){

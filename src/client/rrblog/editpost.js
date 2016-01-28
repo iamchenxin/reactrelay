@@ -12,15 +12,12 @@ class EditPost extends React.Component{
   }
 
 
-  _onSubmit=(data)=>{
+  _onSubmit=(newpost)=>{
     this.props.onFinished&&this.props.onFinished();
-
     let post={
-      id:this.props.post.id,
-      user:data.user,
-      content:data.content,
+      id:this.props.post.id
     };
-    Relay.Store.commitUpdate(new EditPostMutation(post));
+    Relay.Store.commitUpdate(new EditPostMutation({po:this.props.post,newpost}));
 
   };
 
@@ -38,6 +35,18 @@ class EditPost extends React.Component{
   }
 }
 
+var EditPostRelay=Relay.createContainer(EditPost,{
+  fragments:{
+    post:()=>Relay.QL`fragment on Post{
+        id
+        user
+        content
+        ${EditPostMutation.getFragment('po')}
+        }
+        `,
+  }
+});
+
 export {
-  EditPost
+  EditPostRelay
 }
