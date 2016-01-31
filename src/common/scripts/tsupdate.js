@@ -5,4 +5,4 @@ function ts(srcdir){
     updateSchema(path.join(srcdir,'schema.js'),srcdir);
 }
 
-ts(path.resolve( './dst/common/data/rblog'));
+ts(path.resolve( './dst/common/data/newblog'));

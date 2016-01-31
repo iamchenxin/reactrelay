@@ -18,10 +18,12 @@ function updateSchema(schemaPath,dst){
  //   console.log(mySchema);
 
     // Save user readable type system shorthand of schema
+
     fs.writeFileSync(
-        dstPath_noExt+".graphql",
-        printSchema(mySchema)
+      dstPath_noExt+".graphql",
+      printSchema(mySchema)
     );
+
 
     // Save JSON of full schema introspection for Babel Relay Plugin to use
     return graphql(mySchema, introspectionQuery).then(result=>{

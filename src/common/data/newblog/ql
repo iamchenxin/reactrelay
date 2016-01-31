@@ -1,0 +1,45 @@
+
+web{
+    userSearch(name){
+
+    }
+    postSearch(opt:OptQL){
+        postConnection
+    }
+}
+
+comment{
+    user
+    content
+    replyTo:post
+}
+
+post{
+    user
+    content
+    comments:
+}
+
+postConnection{
+    edges:{
+        post
+    }
+}
+
+
+
+
+web{
+    posts{
+
+    }
+    postConnection{
+        edges:{
+            post{
+                user
+                content
+                commit
+            }
+        }
+    }
+}
