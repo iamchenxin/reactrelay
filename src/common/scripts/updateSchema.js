@@ -4,9 +4,9 @@
 import fs from 'fs';
 import path from 'path';
 import { graphql }  from 'graphql';
-import { introspectionQuery, printSchema } from 'graphql/utilities';
+import { introspectionQuery, printSchema,printFineSchema } from 'graphql/utilities';
 
-
+//'../../../lib/graphql/utilities';
 //
 function updateSchema(schemaPath,dst){
     var srcPath=path.resolve(schemaPath);
@@ -21,7 +21,7 @@ function updateSchema(schemaPath,dst){
 
     fs.writeFileSync(
       dstPath_noExt+".graphql",
-      printSchema(mySchema)
+      printFineSchema(mySchema)
     );
 
 
