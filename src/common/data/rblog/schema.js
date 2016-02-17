@@ -11,7 +11,8 @@ import {
     GraphQLObjectType,
     GraphQLSchema,
     GraphQLString,
-    GraphQLInterfaceType
+    GraphQLInterfaceType,
+  GraphQLInputObjectType
 } from 'graphql';
 import {database} from './database.js';
 
@@ -38,6 +39,14 @@ let postQuery = new GraphQLObjectType({
     interfaces:[postInterface]
 });
 
+var TwoName = new GraphQLInputObjectType({
+    name: 'TwoName',
+    fields: {
+        fst: { type: new GraphQLNonNull(GraphQLString) },
+        snd: { type: new GraphQLNonNull(GraphQLString) }
+    }
+});
+
 let postsQuery = new GraphQLObjectType({
     name:'Posts',
     fields:()=>({
@@ -49,6 +58,17 @@ let postsQuery = new GraphQLObjectType({
                 }
             },
             resolve:(parent,{num})=>database.getPosts(num)
+        },
+        full:{
+            type:new GraphQLList(postQuery),
+            args:{
+                data:{
+                    type:TwoName
+                }
+            },
+            resolve:(parent,{data})=>{
+                console.log(data);
+                return database.getPosts(0);}
         }
     })
 });
