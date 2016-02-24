@@ -15,6 +15,7 @@ class Data{
         };
 
         this.postList=[];
+        this.testsCache_postList=[];
     }
 
     clipValue(v){
@@ -45,6 +46,8 @@ class Data{
             content:content,
             commit:0
         });
+        console.dir('newPost get data');
+        console.log(content);
         return id;
     }
 
@@ -52,6 +55,21 @@ class Data{
         this.postList[id].user=user;
         this.postList[id].content=content;
         return this.postList[id];
+    }
+    
+    cachePostsByUsers(userList){
+        var userSet = new Set(userList);
+        
+        var cacheRt = this.postList.filter(post =>{
+            return userSet.has(post.user);
+        });
+        
+        this.testsCache_postList.push(cacheRt);
+        return this.testsCache_postList.length - 1;
+    }
+    
+    getCachePostsByID(id){
+        return this.testsCache_postList[id];
     }
 
 }

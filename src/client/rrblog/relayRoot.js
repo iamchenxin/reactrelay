@@ -6,7 +6,7 @@ import Relay from 'react-relay';
 export class rootR extends Relay.Route {
     static queries={
         posts:()=>{return ( Relay.QL`query{
-        posts(k:"1")
+        posts(k:{userList:["tom","xiao","da"],dumb:1})
         }`);}
     };
     static routeName = 'myRoot';

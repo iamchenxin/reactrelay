@@ -134,6 +134,7 @@ class Blog extends React.Component{
     render(){
         return (
             <div>
+            <p>hello!!</p>
                 <Nav />
                 {( ()=>{
                     if(getHash()=='new_post'){

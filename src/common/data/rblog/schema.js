@@ -11,6 +11,7 @@ import {
     GraphQLObjectType,
     GraphQLSchema,
     GraphQLString,
+    GraphQLInputObjectType,
 } from 'graphql';
 
 import {
@@ -77,6 +78,35 @@ var postsType =new GraphQLObjectType({
     interfaces:[nodeInterface]
 });
 
+var testsType = new GraphQLObjectType({
+   name:'Tests',
+   fields:{
+       postList:{
+           type:postConnectionDef.connectionType,
+           args:connectionArgs,
+           resolve:(_this,args) => {
+               let id = fromGlobalId(this.id);
+               let testsData = connectionFromArray(database.getCachePostsByID(id),args);
+               return testsData;
+           }
+       },
+       id:globalIdField('Tests')
+   } ,
+   interfaces:[nodeInterface]
+});
+
+var testsInput = new GraphQLInputObjectType({
+   name:'TestsInput',
+   fields:{
+       userList:{
+            type:new GraphQLList(GraphQLString),
+            },
+       dumb:{
+            type:GraphQLInt,
+          }
+   } 
+});
+
 let rootQuery = new GraphQLObjectType({
     name:'root',
     fields:()=>({
@@ -85,10 +115,28 @@ let rootQuery = new GraphQLObjectType({
             args:{
                 k:{
                     name:"k",
-                    type:GraphQLString
+                    type:testsInput
                 }
             },
-            resolve:(_this,args)=>{return {k:args.k,id:0}}
+            resolve:(_this,args)=>{
+                console.dir(args);
+                return {k:"hehe",id:0};
+                }
+        },
+        tests:{
+            type:testsType,
+            args:{
+                testsIn:{
+                    type:testsInput
+                }
+            },
+            resolve:(_this,args) => {
+                var cacheID = database.cachePostsByUsers(args.testsIn.userList);
+                console.log(args);
+                return {
+                    id:globalIdField(cacheID)
+                };
+            }
         }
     })
 });

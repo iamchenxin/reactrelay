@@ -2,6 +2,7 @@ import React from 'react';
 import Relay from 'react-relay';
 import {NewPostRelay} from './newpost';
 import {EditPostRelay} from './editpost';
+import {TestsListRelay} from './tests'
 
 class Post extends React.Component{
   constructor(props){
@@ -101,20 +102,22 @@ var UserListRelay=Relay.createContainer(UserList, {
 class Page extends React.Component{
     render(){
         let {posts} = this.props;
-
+        console.dir("-------");
+        console.dir(this.props);
         return (
             <div>
-                {posts.postList.edges.map(edge=>{
+             <p>hello!</p>
+                {posts&&posts.postList.edges.map(edge=>{
                    return ( <RelayPost post={edge.node} />);
                 })}
               <br/>
                 <NewPostRelay posts={posts}/>
               <br/>
-              <UserListRelay postlist={posts.postList}/>
             </div>
-        )
+        );
     }
 }
+//              <UserListRelay postlist={posts.postList}/>
 
 export var RelayPage=Relay.createContainer(Page,{
     fragments:{
@@ -132,3 +135,36 @@ export var RelayPage=Relay.createContainer(Page,{
         }`,
     }
 });
+
+/*
+class Page extends React.Component{
+    render(){
+        let {posts,tests} = this.props;
+        
+        return (
+            <div>
+                <RelayPagePost posts={posts}/>
+
+            </div>
+        );
+    }
+}
+//                 <p>------------TestsListRelay--------------</p>
+ //               <TestsListRelay tests={tests}/>
+//
+//        tests:()=>Relay.QL`
+//        fragment on Posts{
+//            ${TestsListRelay.getFragment('tests')}
+//        }`,
+//
+
+export var RelayPage=Relay.createContainer(Page,{
+    fragments:{
+        posts:()=>Relay.QL`
+        fragment on Posts{
+            ${RelayPagePost.getFragment('posts')}
+        }`,
+
+    }
+});
+*/
